@@ -11,6 +11,28 @@ import (
     "runtime"
     "time"
 )
+
+var (
+    Info *log.Logger
+    Warning *log.Logger
+    Error * log.Logger
+)
+
+func init(){
+    //log.SetFlags(log.Ldate|log.Ltime|log.Lshortfile)
+    //log.Println("飞雪无情的博客:","http://www.flysnow.org")
+    //log.Printf("飞雪无情的微信公众号：%s\n","flysnow_org")
+
+    errFile,err:=os.OpenFile("errors.log",os.O_CREATE|os.O_WRONLY|os.O_APPEND,0666)
+    if err!=nil{
+        log.Fatalln("打开日志文件失败：",err)
+    }
+
+    Info = log.New(io.MultiWriter(os.Stderr,errFile),"Info：",log.Ldate | log.Ltime | log.Lshortfile)
+    Warning = log.New(io.MultiWriter(os.Stderr,errFile),"Warning：",log.Ldate | log.Ltime | log.Lshortfile)
+    Error = log.New(io.MultiWriter(os.Stderr,errFile),"Error：",log.Ldate | log.Ltime | log.Lshortfile)
+}
+
 func GetDestFilePath()string{
     var Path string
     if runtime.GOOS == "windows"{
@@ -103,7 +125,8 @@ func main() {
     )
     http.HandleFunc("/upload/", UploadFile) //设置访问的路由
     ListenAddress := ":9090"
-    fmt.Printf( "服务已经运行，监听端口为%s", ListenAddress )
+    Info.Println("服务已经运行，监听端口为", ListenAddress)
+
     err := http.ListenAndServe(ListenAddress, nil) //设置监听的端口
     if err != nil {
         log.Fatal("ListenAndServe: ", err)
