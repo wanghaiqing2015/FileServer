@@ -19,21 +19,6 @@ var (
     Error * log.Logger
 )
 
-func init(){
-    //log.SetFlags(log.Ldate|log.Ltime|log.Lshortfile)
-    //log.Println("飞雪无情的博客:","http://www.flysnow.org")
-    //log.Printf("飞雪无情的微信公众号：%s\n","flysnow_org")
-
-    errFile,err:=os.OpenFile("errors.log",os.O_CREATE|os.O_WRONLY|os.O_APPEND,0666)
-    if err!=nil{
-        log.Fatalln("打开日志文件失败：",err)
-    }
-
-    Info = log.New(io.MultiWriter(os.Stderr,errFile),"Info：",log.Ldate | log.Ltime | log.Lshortfile)
-    Warning = log.New(io.MultiWriter(os.Stderr,errFile),"Warning：",log.Ldate | log.Ltime | log.Lshortfile)
-    Error = log.New(io.MultiWriter(os.Stderr,errFile),"Error：",log.Ldate | log.Ltime | log.Lshortfile)
-}
-
 func GetDestFilePath()string{
     var Path string
     if runtime.GOOS == "windows"{
@@ -121,6 +106,21 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
     fmt.Println( string(ret) )
 
     fmt.Fprintf(w, string(ret) ) //这个写入到w的是输出到客户端的
+}
+
+func init(){
+    //log.SetFlags(log.Ldate|log.Ltime|log.Lshortfile)
+    //log.Println("飞雪无情的博客:","http://www.flysnow.org")
+    //log.Printf("飞雪无情的微信公众号：%s\n","flysnow_org")
+
+    output,err:=os.OpenFile("output.log",os.O_CREATE|os.O_WRONLY|os.O_APPEND,0666)
+    if err!=nil{
+        log.Fatalln("打开日志文件失败：",err)
+    }
+
+    Info = log.New(io.MultiWriter(os.Stderr,output),"Info：",log.Ldate | log.Ltime | log.Lshortfile)
+    Warning = log.New(io.MultiWriter(os.Stderr,output),"Warning：",log.Ldate | log.Ltime | log.Lshortfile)
+    Error = log.New(io.MultiWriter(os.Stderr,output),"Error：",log.Ldate | log.Ltime | log.Lshortfile)
 }
 
 func main() {
