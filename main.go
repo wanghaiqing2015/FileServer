@@ -103,8 +103,6 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
     result.Data = UrlList
     ret, _ := json.Marshal(result)
 
-    fmt.Println( string(ret) )
-
     fmt.Fprintf(w, string(ret) ) //这个写入到w的是输出到客户端的
 }
 
@@ -141,4 +139,4 @@ func main() {
 
 //文件太大的话，是不是会耗内存
 //日志分文件，每天生成一个
-//做一个界面，非常简单。是一个文件服务器
+//做一个界面，非常简单。是一个文件服务器 http://127.0.0.1:9090/data/
