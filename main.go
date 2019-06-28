@@ -9,6 +9,7 @@ import (
     "os"
     "path/filepath"
     "runtime"
+    "strings"
     "time"
 )
 
@@ -78,6 +79,11 @@ func UploadFile(w http.ResponseWriter, r *http.Request) {
     err := Exists(Path)
     if err !=nil{
         os.MkdirAll(Path, os.ModePerm)
+    }
+
+    for k,v := range r.MultipartForm.Value {
+        fmt.Println("key: ", k)
+        fmt.Println("value: ", strings.Join(v, ""))
     }
 
     var UrlList []string
