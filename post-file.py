@@ -2,7 +2,7 @@ import os
 import requests
 
 files = {   
-            'file1':open(r'D:\3.3.5.zip','rb'),
+            'file1':open(os.path.abspath(__file__),'rb'),
             'file2':open(os.path.abspath(__file__),'rb'),
         }
 
