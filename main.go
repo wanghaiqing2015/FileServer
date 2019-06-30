@@ -34,6 +34,21 @@ func GetDestFilePath()string{
     return Path
 }
 
+func GetLogFilePath()string{
+    var Path string
+    if runtime.GOOS == "windows"{
+        Path = "C:\\log"
+    }else{
+        Path = "/var/log"
+    }
+
+    err := Exists(Path)
+    if err !=nil{
+        os.MkdirAll(Path, os.ModePerm)
+    }
+    return Path
+}
+
 func Exists(path string) error {
     _, err := os.Stat(path)    //os.Stat获取文件信息
     if err != nil {
@@ -111,7 +126,7 @@ func init(){
     //log.Println("飞雪无情的博客:","http://www.flysnow.org")
     //log.Printf("飞雪无情的微信公众号：%s\n","flysnow_org")
 
-    output,err:=os.OpenFile("output.log",os.O_CREATE|os.O_WRONLY|os.O_APPEND,0666)
+    output,err:=os.OpenFile(filepath.Join(GetLogFilePath(), "output.log"), os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
     if err!=nil{
         log.Fatalln("打开日志文件失败：",err)
     }
